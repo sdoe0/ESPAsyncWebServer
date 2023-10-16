@@ -180,10 +180,15 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len){
 
 void AsyncWebServerRequest::_removeNotInterestingHeaders(){
   if (_interestingHeaders.containsIgnoreCase("ANY")) return; // nothing to do
-  for(const auto& header: _headers){
-      if(!_interestingHeaders.containsIgnoreCase(header->name().c_str())){
+
+  auto itr = _headers.begin();
+  while (itr != _headers.end())
+  {
+      const auto header = *itr;
+      ++itr; // ++operator before remove(), otherwise itr becomes invalid
+      
+      if (!_interestingHeaders.containsIgnoreCase(header->name().c_str()))
         _headers.remove(header);
-      }
   }
 }
 
